@@ -69,38 +69,46 @@ end
 stack = Stack:Create()
 -- push values on to the stack
 stack:push("a", "b")
-stack:list()
 -- pop values
 stack:pop()
 stack:push("c")
-stack:list()
 
 
 local axiom = "A"
 local sentence = axiom
 
-local rule1 = {
+local rules = {}
+
+rules[1] = {
     ['a'] = "A",
-    ['b'] = 'AB'
+    ['b'] = 'ABC'
 }
 
-local rule2 = {
+rules[2] = {
     ['a'] = "B",
     ['b'] = "A"
 }
 
 -- function is global to give UI file access
-function generate() 
+  function generate() 
     local nextSentence = ""
+
     for i = 1, #sentence do
-        local current = sentence:sub(i, i)
-        if current == rule1['a'] then
-            nextSentence = nextSentence..rule1['b']
-        elseif current == rule2['a'] then
-            nextSentence = nextSentence..rule2['b']
-        else
-            nextSentence = nextSentence..current
+      local current = sentence:sub(i, i)
+      local found = false;
+
+      for j = 1, #rules do
+        if current == rules[j]['a'] then
+          found = true
+          nextSentence = nextSentence..rules[j]['b']
+          break
         end
+      end
+
+      if not(found) then
+        nextSentence = nextSentence..current
+      end
+
     end
 
     sentence = nextSentence
