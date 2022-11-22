@@ -5,6 +5,7 @@ local function handleButtonEvent( event )
  
     if ( "ended" == event.phase ) then
         generate()
+        turtle()
     end
 end
  

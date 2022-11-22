@@ -6,112 +6,99 @@
 -- Your code here
 local UI = require "ui"
 
-Stack = {}
-
--- Create a Table with stack functions
-function Stack:Create()
-
-  -- stack table
-  local t = {}
-  -- entry table
-  t._et = {}
-
-  -- push a value on to the stack
-  function t:push(...)
-    if ... then
-      local targs = {...}
-      -- add values
-      for _,v in ipairs(targs) do
-        table.insert(self._et, v)
-      end
-    end
-  end
-
-  -- pop a value from the stack
-  function t:pop(num)
-
-    -- get num values from stack
-    local num = num or 1
-
-    -- return table
-    local entries = {}
-
-    -- get values into entries
-    for i = 1, num do
-      -- get last entry
-      if #self._et ~= 0 then
-        table.insert(entries, self._et[#self._et])
-        -- remove last value
-        table.remove(self._et)
-      else
-        break
-      end
-    end
-    -- return unpacked entries
-    return unpack(entries)
-  end
-
-  -- get entries
-  function t:getn()
-    return #self._et
-  end
-
-  -- list values
-  function t:list()
-    for i,v in pairs(self._et) do
-      print(i, v)
-    end
-  end
-  return t
-end
-
--- create stack
-stack = Stack:Create()
--- push values on to the stack
-stack:push("a", "b")
--- pop values
-stack:pop()
-stack:push("c")
-
-
-local axiom = "A"
+local axiom = "F"
 local sentence = axiom
 
 local rules = {}
 
 rules[1] = {
-    ['a'] = "A",
-    ['b'] = 'ABC'
+    ['a'] = "F",
+    ['b'] = 'F[+F]F'
 }
-
-rules[2] = {
-    ['a'] = "B",
-    ['b'] = "A"
-}
+-- FF+[+F-F-F]-[-F+F+F]
 
 -- function is global to give UI file access
-  function generate() 
+function generate()
     local nextSentence = ""
 
     for i = 1, #sentence do
-      local current = sentence:sub(i, i)
-      local found = false;
+        local current = sentence:sub(i, i)
+        local foUnd = false;
 
-      for j = 1, #rules do
-        if current == rules[j]['a'] then
-          found = true
-          nextSentence = nextSentence..rules[j]['b']
-          break
+        for j = 1, #rules do
+            if current == rules[j]['a'] then
+                found = true
+                nextSentence = nextSentence .. rules[j]['b']
+                break
+            end
         end
-      end
 
-      if not(found) then
-        nextSentence = nextSentence..current
-      end
+        if not (found) then
+            nextSentence = nextSentence .. current
+        end
 
     end
 
     sentence = nextSentence
     print(sentence)
 
+end
+
+tx, ty = 200, 250
+lHeight = 10
+
+-- next x, y
+nx = tx
+ny = ty-lHeight
+
+a = 0.7
+-- table.remove(tableName, index) to pop index = #tableName
+-- table[#tableName+1] = {x,y} to push
+
+-- PI/6 = 30 degrees
+
+simpleStack = {}
+simpleStack[1] = {200, 250}
+
+
+function turtle()
+  for i=1, #sentence do
+    local current = sentence:sub(i, i)
+    
+    if current == "F" then
+        display.newLine(tx, ty, nx, ny)
+        tx = nx
+        ty = ny
+        print(tx, ty)
+
+    elseif current == "+" then
+      -- rotate right
+      --nl:rotate(45)
+      dx = lHeight * math.cos(a)
+      dy = lHeight * math.sin(a)
+
+      nx = nx + dx
+      ny = ny - dy
+     -- display.newLine(tx, ty, tx+dx, ty-dy)
+
+    elseif current == "[" then
+        -- push
+        simpleStack[#simpleStack+1] = {tx, ty, nx, ny}
+        print("position saved")
+        print(simpleStack[#simpleStack][1], simpleStack[#simpleStack][2])
+
+    elseif  current == "]" then
+        -- pop
+        tx = simpleStack[#simpleStack][1]
+        ty = simpleStack[#simpleStack][2]
+        nx = simpleStack[#simpleStack][3]
+        ny = simpleStack[#simpleStack][4]
+
+        print("poped position:")
+        print(tx, ty, nx, ny)
+
+    elseif current == "-" then
+        -- rotate left
+    end
+  end
 end
