@@ -13,7 +13,7 @@ local rules = {}
 
 rules[1] = {
     ['a'] = "F",
-    ['b'] = 'F-F'
+    ['b'] = 'FF+F-F-F'
 }
 -- FF+[+F-F-F]-[-F+F+F]
 
@@ -40,13 +40,11 @@ function generate()
     end
 
     sentence = nextSentence
-    -- print(sentence)
+   -- print(sentence)
 
 end
 
 -- PI/6 = 30 degrees
-
--- FF+[+F-F-F]-[-F+F+F]
 
 function turtle()
     -- current x, y
@@ -72,7 +70,8 @@ function turtle()
                 nx = cx
                 ny = cy - length
             end
-
+        
+        
             display.newLine(cx, cy, nx, ny)
 
             -- move turtle to new position
@@ -83,33 +82,29 @@ function turtle()
             -- rotate right
             -- nl:rotate(45)
             -- polar cooridnates key???
-            angle = angle + math.pi / 4
+            angle = angle + math.pi/4
             nx = cx + (length * math.cos(angle)) -- length = radius, theta = angle
             ny = cy + (length * math.sin(angle))
-
+            
+            
+        
         elseif current == "-" then
             -- rotate left
-            angle = angle - math.pi / 4
+            angle = angle - math.pi/4
             nx = cx + (length * math.cos(angle)) -- length = radius, theta = angle
             ny = cy + (length * math.sin(angle))
 
         elseif current == "[" then
             -- push
             -- when saving there is no nx because turtle moved there already
-            sx = cx
-            sy = cy
-            sa = angle
 
         elseif current == "]" then
             -- pop
-            cx = sx
-            cy = sy
-            angle = sa
-
+        
         end
     end
 
-    -- print(sentence)
+   -- print(sentence)
 
 end
 
